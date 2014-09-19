@@ -19,11 +19,13 @@ window.onload = function() {
         var files = e.target.files; // FileList object
 	    var f = files[0];
         // TODO: check file MIME type, should be a plain text file
-
         reader.onload = fileReadComplete;
         reader.readAsText(f);
     });
 
+    initialize_canvas();
+    // de-activate sliders until user loads alignment
+    $('#alignment_slider').slider('option', 'disabled', true);
 };
 
 
@@ -34,10 +36,12 @@ function fileReadComplete (f) {
     /*
     Parse FASTA from file contents
      */
+
     var contents = f.target.result,
         lines = contents.split(/\r\n|\r|\n/g),
         header = '',
-        sequence = '';
+        sequence = '',
+        maxlen = 0;  // maximum sequence length
 
     // parse FASTA file
     for (var line, i = 0; i < lines.length; i++) {
@@ -45,11 +49,19 @@ function fileReadComplete (f) {
         if (line[0] == '>') {
             if (sequence.length > 0) {
                 alignment.push({'header': header, 'rawseq': sequence});
+                if (sequence.length > maxlen) {
+                    maxlen = sequence.length;
+                }
                 sequence = '';
             }
-            header = line.trim('>')
+            header = line.slice(1);  // drop leading '>'
         } else {
             sequence += line;
         }
     }
+    redraw_alignment(0);
+
+    // activate and configure horizontal slider
+    $('#alignment_slider').slider('option', 'disabled', false)
+        .slider('option', 'max', maxlen);
 }
