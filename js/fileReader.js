@@ -6,6 +6,11 @@
 var reader = new FileReader(),
     alignment = [];
 
+var aln_canvas,
+    aln_context,
+    lab_canvas,
+    lab_context;
+
 window.onload = function() {
 	// Check for the various File API support.
 	if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -13,6 +18,12 @@ window.onload = function() {
 	} else {
 	  alert('The File APIs are not fully supported in this browser.');
 	}
+
+    // set up canvases
+    aln_canvas = document.getElementById('alignment_canvas');
+    aln_context = aln_canvas.getContext('2d');
+    lab_canvas = document.getElementById('label_canvas');
+    lab_context = lab_canvas.getContext('2d');
 
 	// bind file browser to HTML5 FileReader
 	$('#id_inputFile').on('change', function (e) {
@@ -23,12 +34,16 @@ window.onload = function() {
         reader.readAsText(f);
     });
 
-    initialize_canvas();
     // de-activate sliders until user loads alignment
     $('#alignment_slider').slider('option', 'disabled', true);
+    $('#vertical_slider').slider('option', 'disabled', true);
+
+    function initialize() {
+        window.addEventListener('resize', resizeCanvas, false);
+        resizeCanvas();
+    }
+    initialize();
 };
-
-
 
 
 
@@ -59,9 +74,12 @@ function fileReadComplete (f) {
             sequence += line;
         }
     }
-    redraw_alignment(0);
+    resizeCanvas();
+    redraw_alignment(0, 0);
 
     // activate and configure horizontal slider
     $('#alignment_slider').slider('option', 'disabled', false)
         .slider('option', 'max', maxlen);
+    $('#vertical_slider').slider('option', 'disabled', false)
+        .slider('option', 'max', alignment.length);
 }
