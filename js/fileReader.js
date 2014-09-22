@@ -36,20 +36,27 @@ window.onload = function() {
 
     // de-activate sliders until user loads alignment
     $('#alignment_slider').slider('option', 'disabled', true);
-    $('#vertical_slider').slider('option', 'disabled', true);
+    $('#vertical_slider').slider('option', 'disabled', true)
+        .slider('option', 'value', 100); // default max, so handle at top
 
     function initialize() {
         window.addEventListener('resize', resizeCanvas, false);
         resizeCanvas();
     }
     initialize();
+
+    // bind mouse-over event handlers
+    aln_canvas.addEventListener('mousemove', function(e) {
+        getPos(e, aln_canvas);
+    }, true);
+
 };
 
 
 
 function fileReadComplete (f) {
-    /*
-    Parse FASTA from file contents
+    /**
+     * Parse FASTA from file contents
      */
 
     var contents = f.target.result,
@@ -74,12 +81,18 @@ function fileReadComplete (f) {
             sequence += line;
         }
     }
+    // add last entry
+    alignment.push({'header': header, 'rawseq': sequence});
+
     resizeCanvas();
-    redraw_alignment(0, 0);
+    redraw_alignment(0, alignment.length);
 
     // activate and configure horizontal slider
     $('#alignment_slider').slider('option', 'disabled', false)
+        .slider('option', 'min', 0)
         .slider('option', 'max', maxlen);
     $('#vertical_slider').slider('option', 'disabled', false)
-        .slider('option', 'max', alignment.length);
+        .slider('option', 'min', Math.floor(aln_canvas.height / base_h))
+        .slider('option', 'max', alignment.length)
+        .slider('option', 'value', alignment.length);
 }
