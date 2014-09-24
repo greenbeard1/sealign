@@ -34,6 +34,7 @@ function resizeCanvas() {
     aln_context.font = '12px Courier New, Courier, serif';
     aln_context.textBaseline = 'middle';
     aln_context.strokeStyle = 'white';
+    aln_context.lineWidth = 1;
 
     // update slider min value
     var v_slider = $('#vertical_slider');
@@ -83,6 +84,11 @@ function redraw_alignment (x, y) {
             aln_context.fillStyle = palette[nuc];
             aln_context.fillRect(c*base_w, r*base_h, base_w-1, base_h-1);
             aln_context.strokeText(nuc, c*base_w + base_w/2, (0.5+r)*base_h);
+            if (r == over_row && c == over_col) {
+                aln_context.lineWidth = 3;
+                aln_context.strokeRect(c*base_w+0.5, r*base_h+0.5, base_w, base_h);
+                aln_context.lineWidth = 1;
+            }
         }
     }
 }

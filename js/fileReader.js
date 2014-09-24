@@ -11,6 +11,10 @@ var aln_canvas,
     lab_canvas,
     lab_context;
 
+var htmlTop, htmlLeft,
+    stylePaddingLeft, styleBorderLeft,
+    stylePaddingTop, styleBorderTop;
+
 window.onload = function() {
 	// Check for the various File API support.
 	if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -24,6 +28,22 @@ window.onload = function() {
     aln_context = aln_canvas.getContext('2d');
     lab_canvas = document.getElementById('label_canvas');
     lab_context = lab_canvas.getContext('2d');
+
+    // adjust mouse coordinate system
+    var html = document.body.parentNode;
+    htmlTop = html.offsetTop;
+    htmlLeft = html.offsetLeft;
+
+    stylePaddingLeft = 0;
+    stylePaddingTop = 0;
+    styleBorderLeft = 0;
+    styleBorderTop = 0;
+    if (window.getComputedStyle) {
+        stylePaddingLeft = parseInt(getComputedStyle(aln_canvas, null).getPropertyValue('padding-left'));
+        stylePaddingTop = parseInt(getComputedStyle(aln_canvas, null).getPropertyValue('padding-top'));
+        styleBorderLeft = parseInt(getComputedStyle(aln_canvas, null).getPropertyValue('border-left-width'));
+        styleBorderTop = parseInt(getComputedStyle(aln_canvas, null).getPropertyValue('border-top-width'));
+    }
 
 	// bind file browser to HTML5 FileReader
 	$('#id_inputFile').on('change', function (e) {
@@ -47,9 +67,12 @@ window.onload = function() {
 
     // bind mouse-over event handlers
     aln_canvas.addEventListener('mousemove', function(e) {
-        getPos(e, aln_canvas);
+        updateResidue(e);
     }, true);
-
+    aln_canvas.addEventListener('mouseleave', function() {
+        over_col = -1;
+        over_row = -1;
+    }, true);
 };
 
 
