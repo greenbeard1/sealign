@@ -5,14 +5,14 @@
 // TODO: detect which base mouse is over
 // TODO: draw highlight box around base - in render.js
 
-function getPos(e, canvas) {
+CanvasState.prototype.getAlignPos = function (e) {
     /** Bind this event handler to mouse-over trigger to calculate
      * the mouse coordinates relative to the Canvas.
      * @param  e {event}
      * @return  Coordinates of base under the mouse pointer, with respect to the sequence
      *  index in the alignment (row) and position in the sequence (column)
      */
-    var element = canvas,
+    var element = this.aln_canvas,
         offset_x = 0,
         offset_y = 0,
         mx, my;
@@ -31,7 +31,12 @@ function getPos(e, canvas) {
     mx = e.pageX - offset_x;
     my = e.pageY - offset_y;
 
-    console.log(mx, my);
     return { x: mx, y: my };
+};
 
-}
+CanvasState.prototype.selectBase = function (e) {
+    /**
+     * Store which base is under the mouse pointer.
+     */
+
+};
