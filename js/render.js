@@ -6,7 +6,7 @@
 
 
 
-var palette = {'A': 'rgb(200,0,0)', 'C': 'rgb(0,150,0)', 'G': 'rgb(90,90,90)', 'T': 'rgb(0,0,200)'};
+var palette = {'A': 'rgb(200,0,0)', 'C': 'rgb(0,150,0)', 'G': 'rgb(90,90,90)', 'T': 'rgb(0,0,200)','a': 'rgb(200,0,0)', 'c': 'rgb(0,150,0)', 'g': 'rgb(90,90,90)', 't': 'rgb(0,0,200)'};
 var base_w = 16,  // width of a residue (nucleotide/amino acid)
     base_h = 20;  // height of  "  "
 
